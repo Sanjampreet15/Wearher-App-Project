@@ -1,0 +1,160 @@
+<div class="container">
+  <div class="row">
+    <div class="column">
+      <sky-box data-sky-id="box-demo" [ariaLabel]="'boxDemo'" >
+        <sky-box-header>
+          <h2 class="sky-font-heading-1 heading"><b>Current Weather</b></h2>
+        
+          <p *ngIf="!isWeatherEmpty()">
+            {{ weather.current.time | date : "dd MMMM yyyy" }}
+            {{ weather.current.time | date : "hh:mm a" }}
+          </p>
+        </sky-box-header>
+        <sky-box-content>
+          <app-not-found-error *ngIf="isWeatherEmpty()"></app-not-found-error>
+          <span class="toggle-label">{{
+            showHourly ? "Hourly Forecast " : "Weekly Forecast "
+          }}</span>
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="showHourly" />
+            <span class="slider"></span>
+          </label>
+          <div class="row">
+            <div>
+              <img
+                class="img-fluid"
+                style="
+                  margin-top: 2%;
+                  margin-bottom: 4%;
+                  height: 148px;
+                  width: 148px;
+                "
+                src="../../assets/images/haw-weather.png"
+                alt=""
+              />
+            </div>
+            <div class="weather-container">
+              <div class="d-flex align-items-center justify-content-center weather-item">
+                <img class="img-fluid weather-icon" src="../../assets/images/hot.png" alt="Hot Icon" />
+                <h3 class="ml-2 weather-text">
+                  Current temp -
+                  {{ weather.current.temperature_2m }}
+                  {{ weather.current_units.temperature_2m }}
+                </h3>
+              </div>
+              <div class="d-flex align-items-center justify-content-center weather-item">
+                <img class="img-fluid weather-icon" src="../../assets/images/cool.png" alt="Cool Icon" />
+                <h3 class="ml-2 weather-text">
+                  Apparent Temperature -
+                  {{ weather.current.apparent_temperature }}
+                  {{ weather.current_units.temperature_2m }}
+                </h3>
+              </div>
+              <div class="d-flex align-items-center justify-content-center weather-item">
+                <img class="img-fluid weather-icon" src="../../assets/images/humidity.png" alt="Humidity Icon" />
+                <h3 class="ml-2 weather-text">
+                  Relative Humidity -
+                  {{ weather.current.relative_humidity_2m }}
+                  {{ weather.current_units.relative_humidity_2m }}
+                </h3>
+              </div>
+              <div class="d-flex align-items-center justify-content-center weather-item">
+                <img class="img-fluid weather-icon" src="../../assets/images/precipitation.png" alt="Precipitation Icon" />
+                <h3 class="ml-2 weather-text">
+                  Precipitation -
+                  {{ weather.current.precipitation }}
+                  {{ weather.current_units.precipitation }}
+                </h3>
+              </div>
+            </div>
+            
+          </div>
+        </sky-box-content>
+      </sky-box>
+    </div>
+    <div class="column">
+      <sky-box data-sky-id="box-demo" [ariaLabel]="'boxDemo'" *ngIf="!showHourly">
+        <sky-box-content>
+          <section>
+            <div class="container">
+              <div class="row">
+                <div class="col-12">
+                  <h3 style="margin-bottom: 4%; margin-top: 1%;">
+                    Weekly Forecast From -
+                    {{ weather.current.time | date : "dd MMMM yyyy" }}
+                  </h3>
+                </div>
+                <app-not-found-error *ngIf="isWeatherEmpty()"></app-not-found-error>
+                <div class="col-12">
+                  <div id="carouselExampleIndicators2" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner" style="max-height: 400px; overflow-y: auto;">
+                      <div class="carousel-item active">
+                        <div class="row">
+                          <div class="col-md-6 mb-3" *ngFor="let day of weather?.daily?.time; let i = index">
+                            <div class="card">
+                              <div class="card-body">
+                                <h4 class="card-title">Day : {{ day }}</h4>
+                                <p>
+                                  Temp : {{ weather?.daily?.temperature_2m_min[i] }}°C - {{ weather?.daily?.temperature_2m_max[i] }}°C
+                                </p>
+                                <p>
+                                  Apparent Temp : {{ weather?.daily?.apparent_temperature_min[i] }}°C -
+                                  {{ weather?.daily?.apparent_temperature_max[i] }}°C
+                                </p>
+                                <p>
+                                  Precipitation : {{ weather?.daily?.precipitation_sum[i] }} mm
+                                </p>
+                                <p>
+                                  Precipitation Hours : {{ weather?.daily?.precipitation_hours[i] }}
+                                </p>
+                                <p>
+                                  Precipitation Probability Max : {{ weather?.daily?.precipitation_probability_max[i] }}%
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </sky-box-content>
+      </sky-box>
+      
+
+      <sky-box data-sky-id="box-demo" [ariaLabel]="'boxDemo'" *ngIf="showHourly">
+        <h3 class="mt-3">
+          24 Hours Forecast-
+          {{ weather.current.time | date : "dd MMMM yyyy" }}
+        </h3>
+        <sky-box-content *ngIf="!isWeatherEmpty()">
+          <app-not-found-error *ngIf="isWeatherEmpty()"></app-not-found-error>
+          <div style="max-height: 400px; overflow-y: auto;">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th style="width: 25%;" scope="col">Hours</th>
+                  <th scope="col">Apparent Temperature</th>
+                  <th scope="col"> Relative Humidity</th>
+                  <th scope="col"> Precipitation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let hour of filterHourlyData(); let i = index">
+                  <td>{{ hour | date : "HH:mm a" }}</td>
+                  <td>{{ weather.hourly.apparent_temperature[i] }}°C</td>
+                  <td>{{ weather.hourly.relative_humidity_2m[i] }}%</td>
+                  <td>{{ weather.hourly.precipitation[i] }} mm</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </sky-box-content>
+      </sky-box>
+      
+    </div>
+  </div>
+</div>
