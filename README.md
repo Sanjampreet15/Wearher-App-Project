@@ -1,4 +1,4 @@
-# Wearher-App-Project
+# Weather-App-Project
 Description:
 
 This project was developed during my allocation at Blackbaud (Nagarro).
